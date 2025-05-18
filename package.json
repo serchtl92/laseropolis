@@ -1,0 +1,35 @@
+{
+  "name": "laseropolis",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@mercadopago/sdk-react": "^1.0.3",
+    "@paypal/react-paypal-js": "^8.8.3",
+    "@stripe/stripe-js": "^7.3.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "autoprefixer": "^10.4.14",
+    "lucide-react": "^0.511.0",
+    "postcss": "^8.4.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.5.3",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "^3.3.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
