@@ -18,6 +18,13 @@ import UserDashboard from './pages/UserDashboard';
 import PrivateRoute from "./components/PrivateRoute";
 import Tienda from "./pages/TiendaPage";
 import ProductoDetailPage from "./pages/ProductDetailPage";
+import VendedorInfo from "./pages/VendedorInfo";
+import CrearTienda from "./pages/CrearTienda";
+import CrearSucursal from './pages/CrearSucursal';
+import TerminosCondiciones from './pages/TerminosCondiciones';
+
+
+
 
 
 
@@ -43,7 +50,9 @@ function App() {
             <Route path="pago-fallido" element={<PagoFallido />} />
             <Route path="tienda" element={<Tienda />} />
             <Route path="/producto/:id" element={<ProductoDetailPage />} />
-
+            <Route path="/crear-sucursal" element={<CrearSucursal />} />
+            <Route path="/vendedor-info" element={<VendedorInfo />} />
+            <Route path="/CrearTienda" element={<CrearTienda />} />
             
             <Route
               path="profile"
@@ -57,6 +66,7 @@ function App() {
             <Route path="admin" element={<AdminDashboard />} />
             <Route path="admin/editar/:id" element={<EditarArchivo />} />
             <Route path="admin/editar-membresia/:id" element={<EditarMembresia />} />
+            <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
           </Route>
         </Routes>
       </Router>

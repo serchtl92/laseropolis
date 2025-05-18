@@ -5,27 +5,47 @@ import { supabase } from "../supabase/client";
 import CreditosTab from "../components/CreditosTab";
 import ReferidosSection from "../components/ReferidosSection";
 import EditarPerfilModal from "../components/EditarPerfilModal";
+import MiTienda from "../components/MiTienda";
 
 function UserDashboard() {
   const [tab, setTab] = useState("perfil");
   const [userData, setUserData] = useState(null);
   const [membresiaInfo, setMembresiaInfo] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [yaEsVendedor, setYaEsVendedor] = useState(false);
+  const [loadingVendedor, setLoadingVendedor] = useState(true);
+
   const navigate = useNavigate();
 
+  // Función para refrescar datos de usuario y verificar vendedor
   const refreshUser = async () => {
     const { data: session } = await supabase.auth.getSession();
     const userId = session?.session?.user?.id;
-    const { data, error } = await supabase
+
+    if (!userId) return;
+
+    // Obtener datos del usuario
+    const { data: usuario, error: userError } = await supabase
       .from("usuarios")
       .select("*")
       .eq("id", userId)
       .single();
-    if (!error) setUserData(data);
+
+    if (!userError) setUserData(usuario);
+
+    // Verificar si es vendedor
+    const { data: vendedor, error } = await supabase
+      .from("vendedores")
+      .select("usuario_id")
+      .eq("usuario_id", userId)
+      .single();
+
+    setYaEsVendedor(!error && vendedor !== null);
+    setLoadingVendedor(false);
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       const { data: session } = await supabase.auth.getSession();
       const userId = session?.session?.user?.id;
 
@@ -34,20 +54,10 @@ function UserDashboard() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("usuarios")
-        .select("*")
-        .eq("id", userId)
-        .single();
-
-      if (error) {
-        console.error("Error al obtener datos del usuario:", error.message);
-      } else {
-        setUserData(data);
-      }
+      await refreshUser();
     };
 
-    fetchUser();
+    fetchData();
   }, [navigate]);
 
   useEffect(() => {
@@ -67,14 +77,13 @@ function UserDashboard() {
 
       if (!error) {
         setMembresiaInfo(data);
-      } else {
-        console.error("Error al obtener membresía:", error.message);
       }
     };
 
     fetchMembresia();
   }, []);
 
+  // Configuración de pestañas
   const tabs = [
     { key: "perfil", label: "Perfil" },
     { key: "membresia", label: "Membresía" },
@@ -84,6 +93,7 @@ function UserDashboard() {
     { key: "actividad", label: "Actividad" },
     { key: "seguridad", label: "Privacidad/Seguridad" },
     { key: "recompensas", label: "Recompensas" },
+    ...(yaEsVendedor ? [{ key: "mitienda", label: "Mi Tienda" }] : []),
   ];
 
   return (
@@ -130,9 +140,19 @@ function UserDashboard() {
                     {new Date(userData.fecha_registro).toLocaleDateString()}
                   </li>
                 </ul>
+
+                {!loadingVendedor && !yaEsVendedor && (
+                  <button
+                    onClick={() => navigate("/vendedor-info")}
+                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition"
+                  >
+                    ¡Afíliate como vendedor!
+                  </button>
+                )}
+
                 <button
                   onClick={() => setMostrarModal(true)}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+                  className="mt-4 ml-4 px-4 py-2 bg-blue-600 text-white rounded"
                 >
                   Editar
                 </button>
@@ -150,6 +170,8 @@ function UserDashboard() {
             )}
           </div>
         )}
+
+        {tab === "mitienda" && yaEsVendedor && <MiTienda usuario={userData} />}
 
         {tab === "membresia" && (
           <div>
@@ -192,18 +214,21 @@ function UserDashboard() {
           </div>
         )}
 
+        {/* Resto de pestañas */}
         {tab === "compras" && (
           <div>
             <h2 className="text-xl font-semibold mb-2">Compras y descargas</h2>
             <p>Lista de archivos adquiridos y opciones de descarga.</p>
           </div>
         )}
+
         {tab === "pagos" && (
           <div>
             <h2 className="text-xl font-semibold mb-2">Métodos de pago</h2>
             <p>Visualiza y gestiona tus métodos de pago.</p>
           </div>
         )}
+
         {tab === "creditos" && <CreditosTab />}
 
         {tab === "actividad" && (
@@ -212,17 +237,14 @@ function UserDashboard() {
             <p>Revisa tu historial de actividad.</p>
           </div>
         )}
+
         {tab === "seguridad" && (
           <div>
-            <h2 className="text-xl font-semibold mb-2">
-              Privacidad y Seguridad
-            </h2>
-            <p>
-              Administra sesiones activas, datos personales y opciones de
-              seguridad.
-            </p>
+            <h2 className="text-xl font-semibold mb-2">Privacidad y Seguridad</h2>
+            <p>Administra sesiones activas, datos personales y opciones de seguridad.</p>
           </div>
         )}
+
         {tab === "recompensas" && (
           <div>
             <h2 className="text-xl font-semibold mb-4">Recompensas</h2>
