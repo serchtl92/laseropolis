@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@mercadopago/sdk-react": "^1.0.3",
     "@paypal/react-paypal-js": "^8.8.3",
     "@react-google-maps/api": "^2.20.6",

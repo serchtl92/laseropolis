@@ -22,11 +22,7 @@ import VendedorInfo from "./pages/VendedorInfo";
 import CrearTienda from "./pages/CrearTienda";
 import CrearSucursal from './pages/CrearSucursal';
 import TerminosCondiciones from './pages/TerminosCondiciones';
-
-
-
-
-
+import EditarTienda from './pages/EditarTienda';
 
 // Configuración de PayPal
 const paypalOptions = {
@@ -53,20 +49,13 @@ function App() {
             <Route path="/crear-sucursal" element={<CrearSucursal />} />
             <Route path="/vendedor-info" element={<VendedorInfo />} />
             <Route path="/CrearTienda" element={<CrearTienda />} />
-            
-            <Route
-              path="profile"
-              element={
-                <PrivateRoute>
-                  <UserDashboard />
-                </PrivateRoute>
-              }
-            />
+            <Route path="profile" element={<PrivateRoute><UserDashboard /></PrivateRoute>}/>
             <Route path="subir" element={<SubirArchivo />} />
             <Route path="admin" element={<AdminDashboard />} />
             <Route path="admin/editar/:id" element={<EditarArchivo />} />
             <Route path="admin/editar-membresia/:id" element={<EditarMembresia />} />
             <Route path="/terminos-condiciones" element={<TerminosCondiciones />} />
+            <Route path="/editar-tienda/:id" element={<EditarTienda />} />
           </Route>
         </Routes>
       </Router>
